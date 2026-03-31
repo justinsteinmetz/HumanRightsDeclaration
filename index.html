@@ -1,5 +1,5 @@
- html>
-<html lan<!DOCTYPEg="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,10 +27,11 @@ body{
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    padding:80px;
+    padding:60px;
     box-sizing:border-box;
     text-align:center;
     scroll-snap-align:start;
+    scroll-snap-stop:always;
 }
 
 /* TYPOGRAPHY */
@@ -170,7 +171,64 @@ p{
     <p class="highlight">Do they actually exist in reality?</p>
 </div>
 
-<!-- 8 -->
-<div class="slide fade">
+<!-- 8 (KEY MOMENT WITH SLIGHT DELAY) -->
+<div class="slide fade" style="transition-delay:0.15s;">
     <p>A government passes a law.</p>
-    <p>Some people can
+    <p>Some people can be executed.</p>
+    <p>Others cannot.</p>
+
+    <p class="highlight">And it’s legal.</p>
+
+    <br>
+
+    <p class="highlight">Is that justice… or power?</p>
+</div>
+
+<!-- PAUSE: 5 seconds -->
+
+<!-- 9 -->
+<div class="slide fade" style="align-items:flex-start; text-align:left;">
+    <p class="quote">“So what actually stops this?”</p>
+</div>
+
+<!-- 10 -->
+<div class="slide fade">
+    <h2>You decide.</h2>
+    <p>A government can remove ONE right to keep control.</p>
+    <p class="small">No talking. Decide alone.</p>
+
+    <div class="flex">
+        <div class="box">Freedom of speech</div>
+        <div class="box">Privacy</div>
+        <div class="box">Fair trial</div>
+        <div class="box">Education</div>
+    </div>
+
+    <h2 class="highlight">Which one do you remove?</h2>
+    <p class="small">Write one sentence.</p>
+</div>
+
+<!-- 11 -->
+<div class="slide fade">
+    <h2>This is what happens.</h2>
+    <p>Rights don’t enforce themselves.</p>
+    <p class="quote">They exist only if someone defends them.</p>
+</div>
+
+<!-- 12 -->
+<div class="slide fade" style="align-items:flex-end; text-align:right;">
+    <p class="quote">If no one stops it…<br>were those rights ever real?</p>
+</div>
+
+<script>
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        entry.target.classList.toggle('visible', entry.isIntersecting);
+    });
+}, { threshold: 0.4 });
+
+document.querySelectorAll('.fade').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

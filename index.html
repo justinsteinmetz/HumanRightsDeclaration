@@ -22,7 +22,7 @@ body{
 
 /* SLIDES */
 .slide{
-    height:100vh;
+    min-height:100dvh;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -35,7 +35,7 @@ body{
 
 /* TYPOGRAPHY */
 h1{
-    font-size:3.5rem;
+    font-size:3.2rem;
     font-weight:800;
     margin-bottom:20px;
 }
@@ -51,6 +51,7 @@ p{
     max-width:800px;
     line-height:1.6;
     opacity:0.9;
+    margin:6px 0;
 }
 
 .quote{
@@ -70,12 +71,13 @@ p{
     margin:10px;
     border-radius:12px;
     min-width:180px;
-    transition:all 0.3s ease;
+    transition:all 0.25s ease;
 }
 
-.box:hover{
+.box:hover,
+.box:active{
     border-color:#ff4d4d;
-    transform:translateY(-4px);
+    transform:translateY(-3px);
 }
 
 .flex{
@@ -101,12 +103,19 @@ p{
     opacity:1;
     transform:translateY(0);
 }
+
+/* MOBILE */
+@media (max-width:600px){
+    h1{font-size:2.4rem;}
+    h2{font-size:1.6rem;}
+    p{font-size:1rem;}
+}
 </style>
 </head>
 
 <body>
 
-<!-- 1 (NO FADE FOR INSTANT IMPACT) -->
+<!-- 1 -->
 <div class="slide">
     <h1>Human Rights</h1>
     <p class="quote">“You are born with them.<br>Until someone stronger decides you’re not.”</p>
@@ -164,167 +173,4 @@ p{
 <!-- 8 -->
 <div class="slide fade">
     <p>A government passes a law.</p>
-    <p>Some people can be executed.</p>
-    <p>Others cannot.</p>
-
-    <p class="highlight">And it’s legal.</p>
-
-    <br>
-
-    <p class="highlight">Is that justice… or power?</p>
-</div>
-
-<!-- PAUSE: do not speak for 5 seconds -->
-
-<!-- 9 (ASYMMETRIC) -->
-<div class="slide fade" style="align-items:flex-start; text-align:left;">
-    <p class="quote">“So what actually stops this?”</p>
-</div>
-
-<!-- 10 -->
-<div class="slide fade">
-    <h2>You decide.</h2>
-    <p>A government can remove ONE right to keep control.</p>
-    <p class="small">No talking. Decide alone.</p>
-
-    <div class="flex">
-        <div class="box">Freedom of speech</div>
-        <div class="box">Privacy</div>
-        <div class="box">Fair trial</div>
-        <div class="box">Education</div>
-    </div>
-
-    <h2 class="highlight">Which one do you remove?</h2>
-    <p class="small">Write one sentence.</p>
-</div>
-
-<!-- 11 -->
-<div class="slide fade">
-    <h2>This is what happens.</h2>
-    <p>Rights don’t enforce themselves.</p>
-    <p class="quote">They exist only if someone defends them.</p>
-</div>
-
-<!-- 12 (ASYMMETRIC END) -->
-<div class="slide fade" style="align-items:flex-end; text-align:right;">
-    <p class="quote">If no one stops it…<br>were those rights ever real?</p>
-</div>
-
-<script>
-const faders = document.querySelectorAll('.fade');
-
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if(entry.isIntersecting){
-            entry.target.classList.add('visible');
-        } else {
-            entry.target.classList.remove('visible');
-        }
-    });
-}, { threshold: 0.3 });
-
-faders.forEach(el => observer.observe(el));
-</script>
-
-</body>
-</html>    <p class="quote">How do you stop power from abusing people?</p>
-</div>
-
-<!-- SLIDE 4 -->
-<div class="slide">
-    <p class="quote">“Everyone has rights.”</p>
-    <p class="small">That was the claim.</p>
-</div>
-
-<!-- SLIDE 5 -->
-<div class="slide">
-    <h2>Do you believe this?</h2>
-    <div class="flex">
-        <div class="box">All humans have the same rights</div>
-        <div class="box">Rights cannot be taken away</div>
-        <div class="box">Everyone is treated equally</div>
-    </div>
-</div>
-
-<!-- SLIDE 6 -->
-<div class="slide">
-    <h2>What does that actually mean?</h2>
-    <div class="flex">
-        <div class="box">Freedom of speech</div>
-        <div class="box">Education</div>
-        <div class="box">No torture</div>
-        <div class="box">A fair trial</div>
-    </div>
-</div>
-
-<!-- SLIDE 7 -->
-<div class="slide">
-    <h2>Now be honest.</h2>
-    <p>These rights exist…<br><br>
-    <span class="highlight">Do they actually exist in reality?</span></p>
-</div>
-
-<!-- SLIDE 8: REAL CASE -->
-<div class="slide">
-    <p>A government passes a law.</p>
-    <p>Some people can be executed.</p>
-    <p>Others cannot.</p>
-    <br>
-    <p class="highlight">Is that justice    <p class="quote">How do you stop power from abusing people?</p>
-</div>
-
-<!-- SLIDE 4 (SHARPENED) -->
-<div class="slide">
-    <p class="quote">“Everyone has rights.”</p>
-    <p class="small">That was the claim.</p>
-</div>
-
-<!-- SLIDE 5 -->
-<div class="slide">
-    <h2>Do you believe this?</h2>
-    <div class="flex">
-        <div class="box">All humans have the same rights</div>
-        <div class="box">Rights cannot be taken away</div>
-        <div class="box">Everyone is treated equally</div>
-    </div>
-</div>
-
-<!-- SLIDE 6 (FIXED) -->
-<div class="slide">
-    <h2>What does that actually mean?</h2>
-    <div class="flex">
-        <div class="box">Freedom of speech</div>
-        <div class="<!-- SLIDE 7: TURN -->
-<div class="slide">
-    <h2>Now it gets uncomfortable.</h2>
-    <p>These rights exist on paper.<br><br>
-    <span class="highlight">Do they exist in reality?</span></p>
-</div>
-
-<!-- SLIDE 8: ACTIVITY -->
-<div class="slide">
-    <h2>Mini Debate (5 mins)</h2>
-    <p>In pairs, choose ONE:</p>
-    <div class="flex">
-        <div class="box">Is free speech unlimited?</div>
-        <div class="box">Should safety ever override freedom?</div>
-        <div class="box">Do all countries really have equal rights?</div>
-    </div>
-</div>
-
-<!-- SLIDE 9: TWIST -->
-<div class="slide">
-    <h2>Reality Check</h2>
-    <p>Human rights are not enforced by magic.</p>
-    <p class="quote">They only exist if people defend them.</p>
-</div>
-
-<!-- SLIDE 10: EXIT -->
-<div class="slide">
-    <h2>Final Question</h2>
-    <p>If your rights were taken away tomorrow…</p>
-    <p class="quote">Who would stop it?</p>
-</div>
-
-</body>
-</html>
+    <p>Some people can

@@ -8,25 +8,32 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
 
 <style>
+html{
+    scroll-behavior:smooth;
+}
+
 body{
     margin:0;
     font-family:'Inter', sans-serif;
     background:#0a0a0a;
     color:#f5f5f5;
-    overflow-x:hidden;
+    scroll-snap-type:y proximity;
 }
 
+/* SLIDES */
 .slide{
     height:100vh;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    padding:60px;
+    padding:80px;
     box-sizing:border-box;
     text-align:center;
+    scroll-snap-align:start;
 }
 
+/* TYPOGRAPHY */
 h1{
     font-size:3.5rem;
     font-weight:800;
@@ -50,7 +57,6 @@ p{
     font-family:'Playfair Display', serif;
     font-style:italic;
     font-size:2rem;
-    max-width:900px;
 }
 
 .highlight{
@@ -63,7 +69,13 @@ p{
     padding:20px;
     margin:10px;
     border-radius:12px;
-    max-width:500px;
+    min-width:180px;
+    transition:all 0.3s ease;
+}
+
+.box:hover{
+    border-color:#ff4d4d;
+    transform:translateY(-4px);
 }
 
 .flex{
@@ -75,32 +87,147 @@ p{
 
 .small{
     font-size:0.9rem;
-    opacity:0.7;
+    opacity:0.6;
+}
+
+/* ANIMATION */
+.fade{
+    opacity:0;
+    transform:translateY(20px);
+    transition:all 0.5s ease;
+}
+
+.fade.visible{
+    opacity:1;
+    transform:translateY(0);
 }
 </style>
 </head>
 
 <body>
 
-<!-- SLIDE 1 -->
+<!-- 1 (NO FADE FOR INSTANT IMPACT) -->
 <div class="slide">
     <h1>Human Rights</h1>
     <p class="quote">“You are born with them.<br>Until someone stronger decides you’re not.”</p>
     <p class="small">Scroll ↓</p>
 </div>
 
-<!-- SLIDE 2 -->
-<div class="slide">
+<!-- 2 -->
+<div class="slide fade">
     <h2>Answer this.</h2>
-    <p>Your government takes away your freedom.<br><br>
-    <span class="highlight">Is that illegal?</span></p>
+    <p>Your government takes away your freedom.</p>
+    <p class="highlight">Who decides if that’s illegal?</p>
 </div>
 
-<!-- SLIDE 3 -->
-<div class="slide">
+<!-- 3 -->
+<div class="slide fade">
     <h2>1948</h2>
     <p>After World War II, the world faced one question:</p>
     <p class="quote">How do you stop power from abusing people?</p>
+</div>
+
+<!-- 4 -->
+<div class="slide fade">
+    <p class="quote">“Everyone has rights.”</p>
+    <p class="small">That was the claim.</p>
+</div>
+
+<!-- 5 -->
+<div class="slide fade">
+    <h2>Do you believe this?</h2>
+    <div class="flex">
+        <div class="box">All humans have the same rights</div>
+        <div class="box">Rights cannot be taken away</div>
+        <div class="box">Everyone is treated equally</div>
+    </div>
+</div>
+
+<!-- 6 -->
+<div class="slide fade">
+    <h2>So what are these “rights”… really?</h2>
+    <div class="flex">
+        <div class="box">Freedom of speech</div>
+        <div class="box">Education</div>
+        <div class="box">No torture</div>
+        <div class="box">A fair trial</div>
+    </div>
+</div>
+
+<!-- 7 -->
+<div class="slide fade">
+    <h2>Now be honest.</h2>
+    <p>These rights exist…</p>
+    <p class="highlight">Do they actually exist in reality?</p>
+</div>
+
+<!-- 8 -->
+<div class="slide fade">
+    <p>A government passes a law.</p>
+    <p>Some people can be executed.</p>
+    <p>Others cannot.</p>
+
+    <p class="highlight">And it’s legal.</p>
+
+    <br>
+
+    <p class="highlight">Is that justice… or power?</p>
+</div>
+
+<!-- PAUSE: do not speak for 5 seconds -->
+
+<!-- 9 (ASYMMETRIC) -->
+<div class="slide fade" style="align-items:flex-start; text-align:left;">
+    <p class="quote">“So what actually stops this?”</p>
+</div>
+
+<!-- 10 -->
+<div class="slide fade">
+    <h2>You decide.</h2>
+    <p>A government can remove ONE right to keep control.</p>
+    <p class="small">No talking. Decide alone.</p>
+
+    <div class="flex">
+        <div class="box">Freedom of speech</div>
+        <div class="box">Privacy</div>
+        <div class="box">Fair trial</div>
+        <div class="box">Education</div>
+    </div>
+
+    <h2 class="highlight">Which one do you remove?</h2>
+    <p class="small">Write one sentence.</p>
+</div>
+
+<!-- 11 -->
+<div class="slide fade">
+    <h2>This is what happens.</h2>
+    <p>Rights don’t enforce themselves.</p>
+    <p class="quote">They exist only if someone defends them.</p>
+</div>
+
+<!-- 12 (ASYMMETRIC END) -->
+<div class="slide fade" style="align-items:flex-end; text-align:right;">
+    <p class="quote">If no one stops it…<br>were those rights ever real?</p>
+</div>
+
+<script>
+const faders = document.querySelectorAll('.fade');
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if(entry.isIntersecting){
+            entry.target.classList.add('visible');
+        } else {
+            entry.target.classList.remove('visible');
+        }
+    });
+}, { threshold: 0.3 });
+
+faders.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>    <p class="quote">How do you stop power from abusing people?</p>
 </div>
 
 <!-- SLIDE 4 -->

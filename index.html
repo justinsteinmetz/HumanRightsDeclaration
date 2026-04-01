@@ -30,17 +30,8 @@ body {
     transition: opacity 0.8s ease;
 }
 
-.slide.active {
-    opacity: 1;
-}
-
-.slide.auto {
-    pointer-events: none;
-}
-
-.slide.blackout {
-    background: #000;
-}
+.slide.active { opacity: 1; }
+.slide.blackout { background: #000; pointer-events: none; }
 
 h1 { font-size: 3rem; }
 h2 { font-size: 2rem; }
@@ -57,12 +48,25 @@ p {
     font-style: italic;
 }
 
-.highlight {
-    color: #ff3b3b;
-    font-weight: 600;
+.highlight { color: #ff3b3b; font-weight: 600; }
+
+.choices {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 30px;
 }
 
-/* FLASH IMAGES */
+.choice {
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 15px 25px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.choice:hover { border-color: #ff3b3b; }
+
 #flash {
     position: fixed;
     inset: 0;
@@ -72,7 +76,6 @@ p {
     z-index: 999;
 }
 
-/* FINAL FADE */
 #fade {
     position: fixed;
     inset: 0;
@@ -86,8 +89,6 @@ p {
 </head>
 
 <body>
-
-<!-- OPENING -->
 
 <div class="slide active">
     <h1>Human Rights</h1>
@@ -125,14 +126,7 @@ p {
 </div>
 
 <div class="slide">
-    <h2>Human rights exist.</h2>
-    <p>They are written down.</p>
-    <p>They are agreed on.</p>
-    <p class="highlight">They are not guaranteed.</p>
-</div>
-
-<div class="slide">
-    <p class="quote">“Everyone has rights.”</p>
+    <p class="quote">"Everyone has rights."</p>
     <p>That’s the claim.</p>
     <p class="highlight">Not the reality.</p>
 </div>
@@ -143,14 +137,41 @@ p {
     <p class="highlight">Those are not the same thing.</p>
 </div>
 
+<div class="slide">
+    <h2>You decide.</h2>
+    <p>A government removes ONE right to stay in control.</p>
+    <div class="choices">
+        <div class="choice">Freedom of speech</div>
+        <div class="choice">Privacy</div>
+        <div class="choice">Fair trial</div>
+        <div class="choice">Education</div>
+    </div>
+</div>
+
+<div class="slide">
+    <p id="choice-result"></p>
+    <p class="highlight">It is now gone.</p>
+</div>
+
+<div class="slide"><p>At first… nothing changes for you.</p></div>
+<div class="slide"><p>Then small changes. Not to you.</p></div>
+<div class="slide"><p>You accept it.</p></div>
+<div class="slide"><p>You notice. You disagree. You continue anyway.</p></div>
+<div class="slide"><p>The system doesn't need your support. Only your acceptance.</p></div>
+<div class="slide"><p>Eventually… it reaches you.</p></div>
+<div class="slide"><p>You speak. You resist. But that right is gone.</p></div>
+<div class="slide"><p>You wait for others. They are waiting too.</p></div>
+<div class="slide"><p>Millions protest.</p></div>
+<div class="slide"><p>Days pass. Weeks pass. The system adjusts.</p></div>
+<div class="slide"><p>The headlines change. The outrage fades.</p></div>
+<div class="slide"><p>You see it less. But it didn't stop.</p></div>
+
 <!-- FLASH TRIGGER -->
 
-<div class="slide auto trigger-flash">
+<div class="slide trigger-flash">
     <p>For a moment…</p>
     <p class="highlight">it feels like change.</p>
 </div>
-
-<!-- FINAL LINE -->
 
 <div class="slide">
     <p class="quote">
@@ -170,7 +191,6 @@ const slides = document.querySelectorAll('.slide');
 let currentIndex = 0;
 let locked = false;
 
-/* YOUR IMAGES */
 const flashImages = [
 "images/crowd.jpg",
 "images/megaphone.jpg",
@@ -192,10 +212,15 @@ function runFlashSequence() {
     locked = true;
 
     function nextImage() {
-        if (i >= flashImages.length) {
-            flash.style.opacity = 0;
-            locked = false;
-            nextSlide();
+        if (i === flashImages.length - 1) {
+            flash.style.backgroundImage = `url(${flashImages[i]})`;
+            flash.style.opacity = 1;
+
+            setTimeout(() => {
+                flash.style.opacity = 0;
+                locked = false;
+                nextSlide();
+            }, 900);
             return;
         }
 
@@ -205,8 +230,8 @@ function runFlashSequence() {
         setTimeout(() => {
             flash.style.opacity = 0;
             i++;
-            setTimeout(nextImage, 60);
-        }, i === flashImages.length - 1 ? 450 : 260);
+            setTimeout(nextImage, 80);
+        }, i < 3 ? 300 : 200);
     }
 
     nextImage();
@@ -220,13 +245,24 @@ function nextSlide() {
         showSlide(currentIndex);
 
         if (slides[currentIndex].classList.contains('trigger-flash')) {
-            setTimeout(runFlashSequence, 2000);
+            setTimeout(runFlashSequence, 1800);
         }
     }
 }
 
-/* CONTROLS */
-document.body.addEventListener('click', nextSlide);
+document.querySelectorAll('.choice').forEach(choice => {
+    choice.addEventListener('click', () => {
+        document.getElementById('choice-result').innerText =
+            "You removed: " + choice.innerText;
+        nextSlide();
+    });
+});
+
+document.body.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('choice')) {
+        nextSlide();
+    }
+});
 
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space' || e.code === 'ArrowRight') {
@@ -235,7 +271,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-/* FINAL FADE */
 setInterval(() => {
     if (currentIndex === slides.length - 2) {
         document.getElementById('fade').style.opacity = 1;

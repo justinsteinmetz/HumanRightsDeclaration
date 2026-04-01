@@ -199,6 +199,12 @@ const flashImages = [
 "images/train.jpg"
 ];
 
+/* 🔥 PRELOAD IMAGES */
+flashImages.forEach(src => {
+    const img = new Image();
+    img.src = src;
+});
+
 function showSlide(index) {
     slides.forEach((slide, i) => {
         slide.classList.toggle('active', i === index);
@@ -248,7 +254,7 @@ function nextSlide() {
         showSlide(currentIndex);
 
         if (slides[currentIndex].classList.contains('trigger-flash')) {
-            setTimeout(runFlashSequence, 1800);
+            setTimeout(runFlashSequence, 2500); // longer delay to ensure loading
         }
     }
 }

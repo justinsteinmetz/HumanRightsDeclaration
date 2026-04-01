@@ -8,99 +8,325 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
 
 <style>
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    margin:0;
-    font-family:'Inter', sans-serif;
-    background:#0a0a0a;
-    color:#f5f5f5;
-    scroll-snap-type:y proximity;
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #0a0a0a;
+    color: #f5f5f5;
+    scroll-snap-type: y proximity;
 }
 
 /* SLIDES */
-.slide{
-    min-height:100dvh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    padding:60px;
-    box-sizing:border-box;
-    text-align:center;
-    scroll-snap-align:start;
-    scroll-snap-stop:always;
+.slide {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+    box-sizing: border-box;
+    text-align: center;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
 }
 
 /* TYPOGRAPHY */
-h1{
-    font-size:3.2rem;
-    font-weight:800;
-    margin-bottom:20px;
+h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin-bottom: 20px;
 }
 
-h2{
-    font-size:2.2rem;
-    font-weight:600;
-    margin-bottom:20px;
+h2 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
 }
 
-p{
-    font-size:1.2rem;
-    max-width:800px;
-    line-height:1.6;
-    opacity:0.9;
-    margin:6px 0;
+p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin: 6px 0;
 }
 
-.quote{
-    font-family:'Playfair Display', serif;
-    font-style:italic;
-    font-size:2rem;
+.quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2rem;
 }
 
-.highlight{
-    color:#ff4d4d;
-    font-weight:600;
-    letter-spacing:0.03em;
+.highlight {
+    color: #ff4d4d;
+    font-weight: 600;
+    letter-spacing: 0.03em;
 }
 
-.box{
-    border:1px solid rgba(255,255,255,0.2);
-    padding:20px;
-    margin:10px;
-    border-radius:12px;
-    min-width:180px;
-    transition:all 0.25s ease;
+/* BOX OPTIONS */
+.flex {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.box {
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 20px;
+    margin: 10px;
+    border-radius: 12px;
+    min-width: 180px;
+    transition: all 0.25s ease;
 }
 
 .box:hover,
-.box:active{
-    border-color:#ff4d4d;
-    transform:translateY(-3px);
+.box:active {
+    border-color: #ff4d4d;
+    transform: translateY(-3px);
 }
 
-.flex{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
-    justify-content:center;
-}
-
-.small{
-    font-size:0.9rem;
-    opacity:0.6;
+/* SMALL TEXT */
+.small {
+    font-size: 0.9rem;
+    opacity: 0.6;
 }
 
 /* ANIMATION */
-.fade{
-    opacity:0;
-    transform:translateY(20px);
-    transition:all 0.5s ease;
+.fade {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
 }
 
+.fade.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    h1 { font-size: 2.4rem; }
+    h2 { font-size: 1.6rem; }
+    p  { font-size: 1rem; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 1 -->
+<div class="slide">
+    <h1>Human Rights</h1>
+    <p class="quote">
+        You benefit from systems<br>
+        that violate them.
+    </p>
+    <p class="small">Scroll ↓</p>
+</div>
+
+<!-- 2 -->
+<div class="slide fade">
+    <p>You’re thinking:</p>
+    <p class="quote">“Not me.”</p>
+    <p class="highlight">Yes, you.</p>
+</div>
+
+<!-- 3 -->
+<div class="slide fade">
+    <p>You didn’t build it.</p>
+    <p>You didn’t design it.</p>
+    <p class="highlight">You live inside it.</p>
+</div>
+
+<!-- 4 -->
+<div class="slide fade">
+    <p>Clothes.</p>
+    <p>Phones.</p>
+    <p>Food.</p>
+    <p class="highlight">Convenience has a cost.</p>
+</div>
+
+<!-- 5 -->
+<div class="slide fade">
+    <p>Human rights are not just violated by governments.</p>
+    <p class="highlight">They are sustained by systems.</p>
+</div>
+
+<!-- 6 -->
+<div class="slide fade">
+    <h2>Answer this.</h2>
+    <p>Your government takes away your freedom.</p>
+    <p class="highlight">Who decides if that’s illegal?</p>
+</div>
+
+<!-- 7 -->
+<div class="slide fade">
+    <h2>1948</h2>
+    <p>After World War II, the world made a promise.</p>
+    <p class="quote">“Never again.”</p>
+    <p class="small">It wasn’t the first time.</p>
+</div>
+
+<!-- 8 -->
+<div class="slide fade">
+    <p class="quote">“Everyone has rights.”</p>
+    <p class="small">That was the claim.</p>
+    <p class="small">It still is.</p>
+</div>
+
+<!-- 9 (RUPTURE) -->
+<div class="slide fade">
+    <h1 class="highlight" style="font-size:4rem;">UNIVERSAL</h1>
+    <p class="small">*terms and conditions apply</p>
+</div>
+
+<!-- 10 -->
+<div class="slide fade">
+    <h2>Do you believe this?</h2>
+    <div class="flex">
+        <div class="box">All humans have the same rights</div>
+        <div class="box">Rights cannot be taken away</div>
+        <div class="box">Everyone is treated equally</div>
+    </div>
+</div>
+
+<!-- 11 -->
+<div class="slide fade">
+    <h2>So what are these “rights”… really?</h2>
+    <div class="flex">
+        <div class="box">Freedom of speech</div>
+        <div class="box">Education</div>
+        <div class="box">No torture</div>
+        <div class="box">A fair trial</div>
+    </div>
+</div>
+
+<!-- 12 -->
+<div class="slide fade">
+    <p>Rights are written down.</p>
+    <p>Power decides when they matter.</p>
+    <p class="highlight">Those are not the same thing.</p>
+</div>
+
+<!-- 13 -->
+<div class="slide fade">
+    <p>A law is passed.</p>
+    <p>One group can be executed.</p>
+    <p>Another group cannot.</p>
+    <p class="highlight">Courts approve it.</p>
+    <p class="highlight">Police enforce it.</p>
+    <p class="highlight">THIS IS LEGAL</p>
+</div>
+
+<!-- 14 -->
+<div class="slide fade">
+    <p>You live there.</p>
+    <p>You are not targeted.</p>
+    <p class="highlight">Do you accept it?</p>
+</div>
+
+<!-- 15 -->
+<div class="slide fade">
+    <h2>You decide.</h2>
+    <p>A government can remove ONE right to keep control.</p>
+    <p class="small">No talking. Decide alone.</p>
+
+    <div class="flex">
+        <div class="box">Freedom of speech</div>
+        <div class="box">Privacy</div>
+        <div class="box">Fair trial</div>
+        <div class="box">Education</div>
+    </div>
+
+    <h2 class="highlight">Which one do you remove?</h2>
+    <p class="highlight">There is no correct answer.</p>
+</div>
+
+<!-- 16 -->
+<div class="slide fade">
+    <p>You chose a right to remove.</p>
+    <p class="highlight">That decision is now law.</p>
+</div>
+
+<!-- 17 -->
+<div class="slide fade">
+    <p>The government uses your decision.</p>
+    <p>People lose that right.</p>
+    <p class="highlight">Not you.</p>
+</div>
+
+<!-- 18 -->
+<div class="slide fade">
+    <p>At first, it feels fine.</p>
+    <p>Nothing changes for you.</p>
+    <p class="highlight">So you accept it.</p>
+</div>
+
+<!-- 19 -->
+<div class="slide fade">
+    <p>You don’t see the harm.</p>
+    <p class="highlight">So you keep benefiting.</p>
+</div>
+
+<!-- 20 -->
+<div class="slide fade">
+    <p>The system works.</p>
+    <p>Control increases.</p>
+    <p class="highlight">So another right is removed.</p>
+</div>
+
+<!-- 21 -->
+<div class="slide fade">
+    <p>Again.</p>
+    <p>And again.</p>
+    <p class="highlight">Each time justified.</p>
+</div>
+
+<!-- 22 -->
+<div class="slide fade">
+    <p>Eventually…</p>
+    <p class="highlight">it affects you.</p>
+</div>
+
+<!-- 23 -->
+<div class="slide fade">
+    <p>You speak.</p>
+    <p>You resist.</p>
+    <p class="highlight">But that right is gone.</p>
+</div>
+
+<!-- 24 -->
+<div class="slide fade">
+    <p>You knew.</p>
+    <p>You continued.</p>
+</div>
+
+<!-- 25 -->
+<div class="slide">
+    <p class="quote">
+        You are part of it.
+    </p>
+</div>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.4 });
+
+document.querySelectorAll('.fade').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
 .fade.visible{
     opacity:1;
     transform:translateY(0);

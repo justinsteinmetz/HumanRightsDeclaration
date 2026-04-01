@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -12,31 +11,31 @@
 body {
     margin: 0;
     font-family: 'Inter', sans-serif;
-    background: black;
-    color: white;
+    background: #000;
+    color: #f5f5f5;
+    overflow: hidden;
 }
 
 .slide {
-    display: none;
-    height: 100vh;
-    padding: 40px;
-    text-align: center;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    padding: 60px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
 }
 
 .slide.active {
-    display: flex;
+    opacity: 1;
 }
-
-h1 { font-size: 3rem; }
-h2 { font-size: 2rem; }
 
 .quote {
     font-family: 'Playfair Display', serif;
     font-size: 2rem;
-    font-style: italic;
 }
 
 .highlight {
@@ -44,115 +43,55 @@ h2 { font-size: 2rem; }
     font-weight: 600;
 }
 
-.choices {
-    display: flex;
-    gap: 20px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.choice {
-    border: 1px solid white;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-.choice:hover {
-    border-color: red;
-}
-
-/* IMAGE FLASH */
-#flashContainer {
+/* FLASH */
+#flash {
     position: fixed;
     inset: 0;
     background: black;
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    z-index: 1000;
 }
 
-#flashContainer img {
+#flash img {
     max-width: 100%;
     max-height: 100%;
 }
 </style>
-
 </head>
 
 <body>
 
 <div class="slide active">
     <h1>Human Rights</h1>
-    <p class="quote">You benefit from systems<br>that violate them.</p>
+    <p class="quote">You benefit from systems that violate them.</p>
 </div>
 
 <div class="slide">
-    <p>"Not me."</p>
+    <p class="quote">"Not me."</p>
     <p class="highlight">Yes, you.</p>
 </div>
 
 <div class="slide">
-    <p>You didn't build it.</p>
-    <p>You live inside it.</p>
+    <p class="highlight">You live inside it.</p>
+</div>
+
+<div class="slide trigger">
+    <p>Millions protest.</p>
 </div>
 
 <div class="slide">
-    <p>Clothes. Phones. Food.</p>
-    <p class="highlight">Convenience has a cost.</p>
+    <p class="quote">You watch. You scroll. You continue.</p>
 </div>
 
-<div class="slide">
-    <p>Human rights are sustained by systems.</p>
-</div>
-
-<div class="slide">
-    <h2>You decide.</h2>
-    <p>One right is removed.</p>
-
-```
-<div class="choices">
-    <div class="choice">Freedom of speech</div>
-    <div class="choice">Privacy</div>
-    <div class="choice">Fair trial</div>
-    <div class="choice">Education</div>
-</div>
-```
-
-</div>
-
-<div class="slide">
-    <p id="choice-result"></p>
-    <p class="highlight">It is now gone.</p>
-</div>
-
-<div class="slide"><p>At first… nothing changes.</p></div>
-<div class="slide"><p>You accept it.</p></div>
-<div class="slide"><p>Then it reaches you.</p></div>
-
-<div class="slide trigger-flash">
-    <p>For a moment…</p>
-    <p class="highlight">it feels like change.</p>
-</div>
-
-<div class="slide">
-    <p class="quote">
-You watch.<br>
-You scroll.<br><br>
-You continue.
-    </p>
-</div>
-
-<!-- FLASH -->
-
-<div id="flashContainer">
-    <img id="flashImage" src="">
+<div id="flash">
+    <img id="flashImg">
 </div>
 
 <script>
 const slides = document.querySelectorAll('.slide');
-let current = 0;
+let index = 0;
 let locked = false;
 
 const images = [
@@ -164,78 +103,72 @@ const images = [
 "images/train.jpg"
 ];
 
-function showSlide(i) {
+function show(i) {
     slides.forEach(s => s.classList.remove('active'));
     slides[i].classList.add('active');
 }
 
-function nextSlide() {
+function next() {
     if (locked) return;
 
-    current++;
-    if (current >= slides.length) return;
+    index++;
+    if (index >= slides.length) index = slides.length - 1;
 
-    showSlide(current);
+    show(index);
 
-    if (slides[current].classList.contains('trigger-flash')) {
-        runFlash();
+    if (slides[index].classList.contains('trigger')) {
+        flash();
     }
 }
 
-function runFlash() {
-    const container = document.getElementById('flashContainer');
-    const img = document.getElementById('flashImage');
+function prev() {
+    if (locked) return;
+
+    index--;
+    if (index < 0) index = 0;
+
+    show(index);
+}
+
+function flash() {
+    const container = document.getElementById('flash');
+    const img = document.getElementById('flashImg');
 
     let i = 0;
     locked = true;
     container.style.display = "flex";
 
-    function next() {
+    function run() {
+        img.src = images[i];
 
         if (i === images.length - 1) {
-            img.src = images[i];
-
             setTimeout(() => {
                 container.style.display = "none";
                 locked = false;
-                nextSlide();
+                next();
             }, 1500);
-
             return;
         }
 
-        img.src = images[i];
-
         setTimeout(() => {
             i++;
-            next();
-        }, i < 2 ? 800 : 400);
+            run();
+        }, 800);
     }
 
-    next();
+    run();
 }
 
-document.body.addEventListener('click', (e) => {
-    if (!e.target.classList.contains('choice')) {
-        nextSlide();
-    }
+// click
+document.body.onclick = next;
+
+// keyboard
+document.addEventListener('keydown', e => {
+    if (e.code === "ArrowRight" || e.code === "Space") next();
+    if (e.code === "ArrowLeft") prev();
 });
 
-document.querySelectorAll('.choice').forEach(choice => {
-    choice.onclick = () => {
-        document.getElementById('choice-result').innerText =
-            "You removed: " + choice.innerText;
-        nextSlide();
-    };
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.code === "Space" || e.code === "ArrowRight") {
-        nextSlide();
-    }
-});
-
-showSlide(0);
+show(0);
 </script>
 
 </body>

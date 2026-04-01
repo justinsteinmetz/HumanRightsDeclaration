@@ -20,13 +20,12 @@ body {
     position: absolute;
     inset: 0;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 60px;
     text-align: center;
     opacity: 0;
     transition: opacity 0.6s ease;
+    padding: 60px;
 }
 
 .slide.active {
@@ -43,7 +42,6 @@ body {
     font-weight: 600;
 }
 
-/* FLASH */
 #flash {
     position: fixed;
     inset: 0;
@@ -77,9 +75,7 @@ body {
     <p class="highlight">You live inside it.</p>
 </div>
 
-<div class="slide trigger">
-    <p>Millions protest.</p>
-</div>
+<div class="slide trigger"></div>
 
 <div class="slide">
     <p class="quote">You watch. You scroll. You continue.</p>
@@ -103,6 +99,20 @@ const images = [
 "images/train.jpg"
 ];
 
+// PRELOAD EVERYTHING FIRST
+function preload(callback) {
+    let loaded = 0;
+
+    images.forEach(src => {
+        const img = new Image();
+        img.onload = img.onerror = () => {
+            loaded++;
+            if (loaded === images.length) callback();
+        };
+        img.src = src;
+    });
+}
+
 function show(i) {
     slides.forEach(s => s.classList.remove('active'));
     slides[i].classList.add('active');
@@ -111,14 +121,19 @@ function show(i) {
 function next() {
     if (locked) return;
 
+    const nextIndex = index + 1;
+
+    // trigger flash BEFORE showing slide
+    if (slides[nextIndex] && slides[nextIndex].classList.contains('trigger')) {
+        index = nextIndex;
+        flash();
+        return;
+    }
+
     index++;
     if (index >= slides.length) index = slides.length - 1;
 
     show(index);
-
-    if (slides[index].classList.contains('trigger')) {
-        flash();
-    }
 }
 
 function prev() {
@@ -153,22 +168,24 @@ function flash() {
         setTimeout(() => {
             i++;
             run();
-        }, 800);
+        }, i < 2 ? 1200 : 700);
     }
 
     run();
 }
 
-// click
+// controls
 document.body.onclick = next;
 
-// keyboard
 document.addEventListener('keydown', e => {
     if (e.code === "ArrowRight" || e.code === "Space") next();
     if (e.code === "ArrowLeft") prev();
 });
 
-show(0);
+// START ONLY AFTER IMAGES ARE READY
+preload(() => {
+    show(0);
+});
 </script>
 
 </body>

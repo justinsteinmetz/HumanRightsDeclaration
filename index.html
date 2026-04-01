@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -27,27 +28,27 @@ body {
     text-align: center;
     opacity: 0;
     transition: opacity 0.8s ease;
-    overflow-y: auto;
 }
 
 .slide.active {
     opacity: 1;
 }
 
-.slide.blackout {
-    background: #000;
+.slide.auto {
     pointer-events: none;
-    cursor: default;
 }
 
-h1 { font-size: 3rem; margin-bottom: 20px; }
-h2 { font-size: 2rem; margin-bottom: 20px; }
+.slide.blackout {
+    background: #000;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2rem; }
 
 p {
     max-width: 800px;
     line-height: 1.6;
     opacity: 0.9;
-    margin: 6px 0;
 }
 
 .quote {
@@ -61,77 +62,32 @@ p {
     font-weight: 600;
 }
 
-.choices {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 30px;
+/* FLASH IMAGES */
+#flash {
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    z-index: 999;
 }
 
-.choice {
-    border: 1px solid rgba(255,255,255,0.3);
-    padding: 15px 25px;
-    cursor: pointer;
-    transition: 0.2s;
-    border-radius: 8px;
-    font-size: 1.1rem;
-}
-
-.choice:hover {
-    border-color: #ff3b3b;
-    transform: translateY(-2px);
-}
-
-.rights-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-    max-width: 1000px;
-    margin-top: 30px;
-    text-align: left;
-    font-size: 0.85rem;
-    opacity: 0.85;
-}
-
-.rights-grid div {
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.small {
-    font-size: 0.8rem;
-    opacity: 0.6;
-    margin-top: 20px;
-}
-
-/* fade layer */
-.fade-to-black {
+/* FINAL FADE */
+#fade {
     position: fixed;
     inset: 0;
     background: black;
     opacity: 0;
-    transition: opacity 1.5s ease;
-    pointer-events: none;
-    z-index: 999;
-}
-
-.fade-to-black.active {
-    opacity: 1;
-}
-
-@media (max-width: 600px) {
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.5rem; }
-    .quote { font-size: 1.4rem; }
-    .choice { padding: 10px 16px; font-size: 0.9rem; }
-    .rights-grid { grid-template-columns: 1fr; }
-    .slide { padding: 40px 20px; }
+    transition: opacity 2s ease;
+    z-index: 1000;
 }
 </style>
+
 </head>
 
 <body>
+
+<!-- OPENING -->
 
 <div class="slide active">
     <h1>Human Rights</h1>
@@ -166,38 +122,19 @@ p {
     <h2>1948</h2>
     <p>After World War II, the world made a promise.</p>
     <p class="quote">"Never again."</p>
-    <p class="small">The Universal Declaration of Human Rights.</p>
 </div>
 
 <div class="slide">
-    <h2>The 30 Rights (UDHR)</h2>
-    <div class="rights-grid">
-        <div>Equality and dignity</div>
-        <div>Freedom from discrimination</div>
-        <div>Right to life</div>
-        <div>No slavery</div>
-        <div>No torture</div>
-        <div>Equal before the law</div>
-        <div>Fair trial</div>
-        <div>Presumption of innocence</div>
-        <div>Privacy</div>
-        <div>Freedom of movement</div>
-        <div>Right to asylum</div>
-        <div>Nationality</div>
-        <div>Marriage and family</div>
-        <div>Own property</div>
-        <div>Freedom of thought</div>
-        <div>Freedom of expression</div>
-        <div>Freedom of assembly</div>
-        <div>Participation in government</div>
-        <div>Social security</div>
-        <div>Work and fair pay</div>
-        <div>Rest and leisure</div>
-        <div>Standard of living</div>
-        <div>Education</div>
-        <div>Culture and science</div>
-    </div>
-    <p class="small">*terms and conditions apply</p>
+    <h2>Human rights exist.</h2>
+    <p>They are written down.</p>
+    <p>They are agreed on.</p>
+    <p class="highlight">They are not guaranteed.</p>
+</div>
+
+<div class="slide">
+    <p class="quote">“Everyone has rights.”</p>
+    <p>That’s the claim.</p>
+    <p class="highlight">Not the reality.</p>
 </div>
 
 <div class="slide">
@@ -206,85 +143,14 @@ p {
     <p class="highlight">Those are not the same thing.</p>
 </div>
 
-<div class="slide">
-    <h2>You decide.</h2>
-    <p>A government removes ONE right to stay in control.</p>
-    <div class="choices">
-        <div class="choice">Freedom of speech</div>
-        <div class="choice">Privacy</div>
-        <div class="choice">Fair trial</div>
-        <div class="choice">Education</div>
-    </div>
+<!-- FLASH TRIGGER -->
+
+<div class="slide auto trigger-flash">
+    <p>For a moment…</p>
+    <p class="highlight">it feels like change.</p>
 </div>
 
-<div class="slide">
-    <p id="choice-result"></p>
-    <p class="highlight">It is now gone.</p>
-</div>
-
-<div class="slide">
-    <p>At first… nothing changes for you.</p>
-</div>
-
-<div class="slide">
-    <p>Then small changes.</p>
-    <p class="highlight">Not to you.</p>
-</div>
-
-<div class="slide">
-    <p>Then more.</p>
-    <p>Quietly.</p>
-    <p class="highlight">You accept it.</p>
-</div>
-
-<div class="slide">
-    <p>You notice.</p>
-    <p>You disagree.</p>
-    <p class="highlight">You continue anyway.</p>
-</div>
-
-<div class="slide">
-    <p>The system doesn't need your support.</p>
-    <p class="highlight">Only your acceptance.</p>
-</div>
-
-<div class="slide">
-    <p>Eventually…</p>
-    <p class="highlight">it reaches you.</p>
-</div>
-
-<div class="slide">
-    <p>You speak.</p>
-    <p>You resist.</p>
-    <p class="highlight">But that right is gone.</p>
-</div>
-
-<div class="slide">
-    <p>You wait for others.</p>
-    <p class="highlight">They are waiting too.</p>
-</div>
-
-<div class="slide">
-    <p>Millions protest.</p>
-    <p>They march.</p>
-    <p>They demand change.</p>
-</div>
-
-<div class="slide">
-    <p>Days pass.</p>
-    <p>Weeks pass.</p>
-    <p class="highlight">The system adjusts.</p>
-</div>
-
-<div class="slide">
-    <p>The headlines change.</p>
-    <p>The outrage fades.</p>
-</div>
-
-<div class="slide">
-    <p>You see it less.</p>
-    <p class="highlight">But it didn't stop.</p>
-</div>
+<!-- FINAL LINE -->
 
 <div class="slide">
     <p class="quote">
@@ -296,11 +162,23 @@ You continue.
 
 <div class="slide blackout"></div>
 
-<div id="fade" class="fade-to-black"></div>
+<div id="flash"></div>
+<div id="fade"></div>
 
 <script>
 const slides = document.querySelectorAll('.slide');
 let currentIndex = 0;
+let locked = false;
+
+/* YOUR IMAGES */
+const flashImages = [
+"images/crowd.jpg",
+"images/megaphone.jpg",
+"images/smoke.jpg",
+"images/rupture.jpg",
+"images/arrest.jpg",
+"images/train.jpg"
+];
 
 function showSlide(index) {
     slides.forEach((slide, i) => {
@@ -308,40 +186,61 @@ function showSlide(index) {
     });
 }
 
-function nextSlide() {
-    if (currentIndex < slides.length - 2) {
-        currentIndex++;
-        showSlide(currentIndex);
-    } else if (currentIndex === slides.length - 2) {
-        document.getElementById('fade').classList.add('active');
+function runFlashSequence() {
+    const flash = document.getElementById('flash');
+    let i = 0;
+    locked = true;
+
+    function nextImage() {
+        if (i >= flashImages.length) {
+            flash.style.opacity = 0;
+            locked = false;
+            nextSlide();
+            return;
+        }
+
+        flash.style.backgroundImage = `url(${flashImages[i]})`;
+        flash.style.opacity = 1;
 
         setTimeout(() => {
-            currentIndex++;
-            showSlide(currentIndex);
-        }, 1200);
+            flash.style.opacity = 0;
+            i++;
+            setTimeout(nextImage, 60);
+        }, i === flashImages.length - 1 ? 450 : 260);
+    }
+
+    nextImage();
+}
+
+function nextSlide() {
+    if (locked) return;
+
+    if (currentIndex < slides.length - 1) {
+        currentIndex++;
+        showSlide(currentIndex);
+
+        if (slides[currentIndex].classList.contains('trigger-flash')) {
+            setTimeout(runFlashSequence, 2000);
+        }
     }
 }
 
-document.querySelectorAll('.choice').forEach(choice => {
-    choice.addEventListener('click', () => {
-        document.getElementById('choice-result').innerText =
-            "You removed: " + choice.innerText + ".";
-        nextSlide();
-    });
-});
-
-document.body.addEventListener('click', (e) => {
-    if (!e.target.classList.contains('choice') && currentIndex !== 8) {
-        nextSlide();
-    }
-});
+/* CONTROLS */
+document.body.addEventListener('click', nextSlide);
 
 document.addEventListener('keydown', (e) => {
-    if ((e.code === 'Space' || e.code === 'ArrowRight') && currentIndex !== 8) {
+    if (e.code === 'Space' || e.code === 'ArrowRight') {
         e.preventDefault();
         nextSlide();
     }
 });
+
+/* FINAL FADE */
+setInterval(() => {
+    if (currentIndex === slides.length - 2) {
+        document.getElementById('fade').style.opacity = 1;
+    }
+}, 1000);
 
 showSlide(0);
 </script>

@@ -1,9 +1,161 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human Rights — Not Optional</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: black;
+    color: white;
+}
+
+.slide {
+    display: none;
+    height: 100vh;
+    padding: 40px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.slide.active {
+    display: flex;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2rem; }
+
+.quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-style: italic;
+}
+
+.highlight {
+    color: #ff3b3b;
+    font-weight: 600;
+}
+
+.choices {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.choice {
+    border: 1px solid white;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.choice:hover {
+    border-color: red;
+}
+
+/* IMAGE FLASH */
+#flashContainer {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+#flashContainer img {
+    max-width: 100%;
+    max-height: 100%;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="slide active">
+    <h1>Human Rights</h1>
+    <p class="quote">You benefit from systems<br>that violate them.</p>
+</div>
+
+<div class="slide">
+    <p>"Not me."</p>
+    <p class="highlight">Yes, you.</p>
+</div>
+
+<div class="slide">
+    <p>You didn't build it.</p>
+    <p>You live inside it.</p>
+</div>
+
+<div class="slide">
+    <p>Clothes. Phones. Food.</p>
+    <p class="highlight">Convenience has a cost.</p>
+</div>
+
+<div class="slide">
+    <p>Human rights are sustained by systems.</p>
+</div>
+
+<div class="slide">
+    <h2>You decide.</h2>
+    <p>One right is removed.</p>
+
+```
+<div class="choices">
+    <div class="choice">Freedom of speech</div>
+    <div class="choice">Privacy</div>
+    <div class="choice">Fair trial</div>
+    <div class="choice">Education</div>
+</div>
+```
+
+</div>
+
+<div class="slide">
+    <p id="choice-result"></p>
+    <p class="highlight">It is now gone.</p>
+</div>
+
+<div class="slide"><p>At first… nothing changes.</p></div>
+<div class="slide"><p>You accept it.</p></div>
+<div class="slide"><p>Then it reaches you.</p></div>
+
+<div class="slide trigger-flash">
+    <p>For a moment…</p>
+    <p class="highlight">it feels like change.</p>
+</div>
+
+<div class="slide">
+    <p class="quote">
+You watch.<br>
+You scroll.<br><br>
+You continue.
+    </p>
+</div>
+
+<!-- FLASH -->
+
+<div id="flashContainer">
+    <img id="flashImage" src="">
+</div>
+
 <script>
 const slides = document.querySelectorAll('.slide');
-let currentIndex = 0;
+let current = 0;
 let locked = false;
 
-const flashImages = [
+const images = [
 "images/crowd.jpg",
 "images/megaphone.jpg",
 "images/smoke.jpg",
@@ -12,93 +164,56 @@ const flashImages = [
 "images/train.jpg"
 ];
 
-let imagesLoaded = false;
-
-/* ✅ PRELOAD WITH GUARANTEE */
-function preloadImages(callback) {
-    let loaded = 0;
-
-    flashImages.forEach(src => {
-        const img = new Image();
-        img.onload = img.onerror = () => {
-            loaded++;
-            if (loaded === flashImages.length) {
-                imagesLoaded = true;
-                callback();
-            }
-        };
-        img.src = src;
-    });
-}
-
-function showSlide(index) {
-    slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
-    });
-}
-
-function runFlashSequence() {
-    const flash = document.getElementById('flash');
-    let i = 0;
-    locked = true;
-
-    const timings = [700, 700, 600, 350, 350];
-
-    function nextImage() {
-
-        // FINAL IMAGE
-        if (i === flashImages.length - 1) {
-            flash.style.backgroundImage = `url(${flashImages[i]})`;
-            flash.style.opacity = 1;
-
-            setTimeout(() => {
-                flash.style.opacity = 0;
-                locked = false;
-                nextSlide();
-            }, 1800);
-
-            return;
-        }
-
-        flash.style.backgroundImage = `url(${flashImages[i]})`;
-        flash.style.opacity = 1;
-
-        setTimeout(() => {
-            flash.style.opacity = 0;
-            i++;
-            setTimeout(nextImage, 150);
-        }, timings[i]);
-    }
-
-    nextImage();
+function showSlide(i) {
+    slides.forEach(s => s.classList.remove('active'));
+    slides[i].classList.add('active');
 }
 
 function nextSlide() {
     if (locked) return;
 
-    if (currentIndex < slides.length - 1) {
-        currentIndex++;
-        showSlide(currentIndex);
+    current++;
+    if (current >= slides.length) return;
 
-        if (slides[currentIndex].classList.contains('trigger-flash')) {
+    showSlide(current);
 
-            // 🔥 WAIT UNTIL IMAGES ARE READY
-            if (!imagesLoaded) {
-                preloadImages(() => runFlashSequence());
-            } else {
-                runFlashSequence();
-            }
-        }
+    if (slides[current].classList.contains('trigger-flash')) {
+        runFlash();
     }
 }
 
-document.querySelectorAll('.choice').forEach(choice => {
-    choice.addEventListener('click', () => {
-        document.getElementById('choice-result').innerText =
-            "You removed: " + choice.innerText;
-        nextSlide();
-    });
-});
+function runFlash() {
+    const container = document.getElementById('flashContainer');
+    const img = document.getElementById('flashImage');
+
+    let i = 0;
+    locked = true;
+    container.style.display = "flex";
+
+    function next() {
+
+        if (i === images.length - 1) {
+            img.src = images[i];
+
+            setTimeout(() => {
+                container.style.display = "none";
+                locked = false;
+                nextSlide();
+            }, 1500);
+
+            return;
+        }
+
+        img.src = images[i];
+
+        setTimeout(() => {
+            i++;
+            next();
+        }, i < 2 ? 800 : 400);
+    }
+
+    next();
+}
 
 document.body.addEventListener('click', (e) => {
     if (!e.target.classList.contains('choice')) {
@@ -106,18 +221,22 @@ document.body.addEventListener('click', (e) => {
     }
 });
 
+document.querySelectorAll('.choice').forEach(choice => {
+    choice.onclick = () => {
+        document.getElementById('choice-result').innerText =
+            "You removed: " + choice.innerText;
+        nextSlide();
+    };
+});
+
 document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' || e.code === 'ArrowRight') {
-        e.preventDefault();
+    if (e.code === "Space" || e.code === "ArrowRight") {
         nextSlide();
     }
 });
 
-setInterval(() => {
-    if (currentIndex === slides.length - 2) {
-        document.getElementById('fade').style.opacity = 1;
-    }
-}, 1000);
-
 showSlide(0);
 </script>
+
+</body>
+</html>

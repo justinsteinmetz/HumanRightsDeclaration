@@ -74,6 +74,7 @@ p {
     background-position: center;
     opacity: 0;
     z-index: 999;
+    transition: opacity 0.15s ease;
 }
 
 #fade {
@@ -166,8 +167,6 @@ p {
 <div class="slide"><p>The headlines change. The outrage fades.</p></div>
 <div class="slide"><p>You see it less. But it didn't stop.</p></div>
 
-<!-- FLASH TRIGGER -->
-
 <div class="slide trigger-flash">
     <p>For a moment…</p>
     <p class="highlight">it feels like change.</p>
@@ -211,7 +210,10 @@ function runFlashSequence() {
     let i = 0;
     locked = true;
 
+    const timings = [700, 700, 600, 350, 350];
+
     function nextImage() {
+
         if (i === flashImages.length - 1) {
             flash.style.backgroundImage = `url(${flashImages[i]})`;
             flash.style.opacity = 1;
@@ -220,7 +222,8 @@ function runFlashSequence() {
                 flash.style.opacity = 0;
                 locked = false;
                 nextSlide();
-            }, 900);
+            }, 1800);
+
             return;
         }
 
@@ -230,8 +233,8 @@ function runFlashSequence() {
         setTimeout(() => {
             flash.style.opacity = 0;
             i++;
-            setTimeout(nextImage, 80);
-        }, i < 3 ? 300 : 200);
+            setTimeout(nextImage, 150);
+        }, timings[i]);
     }
 
     nextImage();

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Human Rights \u2014 Not Optional</title>
+<title>Human Rights — Not Optional</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
 
@@ -69,9 +69,39 @@ h1 {
 
 .plateau {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(1.2}
+    font-size: clamp(1.2rem, 3.5vw, 2rem);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin: 0;
+}
 
-#hint.hidden { opacity: 0; }
+.final .quote {
+    line-height: 2;
+    color: #f5f5f5;
+}
+
+#flash {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 1000;
+    background: #000;
+}
+
+#flash img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+#flash img.visible {
+    opacity: 1;
+}
 </style>
 </head>
 
@@ -93,16 +123,18 @@ h1 {
         <p class="highlight">You live inside it.</p>
     </div>
 
-    <!-- trigger: no visible content, skipped in both directions -->
-    <div class="slide trigger" id="s3"></div>
+    <div class="slide" id="s3">
+        <p class="plateau">Nothing changes.</p>
+    </div>
 
-    <div class="slide" id="s4">
-        <p class="quote">You watch. You scroll. You continue.</p>
+    <div class="slide trigger" id="s4"></div>
+
+    <div class="slide final" id="s5">
+        <p class="quote">You watch.<br>You scroll.<br><br>You continue.</p>
     </div>
 
 </div>
 
-<!-- Flash overlay with repo images -->
 <div id="flash">
     <img src="images/crowd.jpg" alt="">
     <img src="images/megaphone.jpg" alt="">
@@ -112,70 +144,13 @@ h1 {
     <img src="images/train.jpg" alt="">
 </div>
 
-<div id="hint">click or press → to advance</div>
-
 <script>
 const slides = document.querySelectorAll('.slide');
 const flashEl = document.getElementById('flash');
 const flashImgs = document.querySelectorAll('#flash img');
-const hint = document.getElementById('hint');
 
 let index = 0;
 let locked = false;
-let hintHidden = false;
-
-function isTrigger(i) {
-    return slides[i] && slides[i].classList.contains('trigger');
-}
-
-function show(i) {
-    slides.forEach(s => s.classList.remove('active'));
-    if (slides[i]) slides[i].classList.add('active');
-}
-
-function hideHint() {
-    if (!hintHidden) {
-        hint.classList.add('hidden');
-        hintHidden = true;
-    }
-}
-
-function next() {
-    if (locked) return;
-    hideHint();
-
-    let nextIndex = index + 1;
-    if (nextIndex >= slides.length) {
-        // Last slide: fade out, loop back
-        endLoop();
-        return;
-    }
-
-    // If next is trigger, fire flash then skip past it
-    if (isTrigger(nextIndex)) {
-        index = nextIndex;
-        runFlash();
-        return;
-    }
-
-    index = nextIndex;
-    show(index);
-}
-
-function prev() {
-    if (locked) return;
-    hideHint();
-
-    let prevIndex = index - 1;
-    if (prevIndex < 0) return;
-
-    // Skip trigger slide going backwards
-    if (isTrigger(prevIndex)) prevIndex--;
-    if (prevIndex < 0) return;
-
-    index = prevIndex;
-    show(index);
-}
 
 const imageSrcs = [
     'images/crowd.jpg',
@@ -186,71 +161,95 @@ const imageSrcs = [
     'images/train.jpg'
 ];
 
-// Preload images
-let loaded = 0;
-imageSrcs.forEach((src, i) => {
-    flashImgs[i].onload = flashImgs[i].onerror = () => { loaded++; };
-    flashImgs[i].src = src;
-});
+imageSrcs.forEach((src, i) => { flashImgs[i].src = src; });
+
+function isTrigger(i) {
+    return slides[i] && slides[i].classList.contains('trigger');
+}
+
+function show(i) {
+    slides.forEach(s => s.classList.remove('active'));
+    if (slides[i]) slides[i].classList.add('active');
+}
+
+function next() {
+    if (locked) return;
+
+    const nextIndex = index + 1;
+    if (nextIndex >= slides.length) return;
+
+    if (isTrigger(nextIndex)) {
+        index = nextIndex;
+        locked = true;
+        runFlash();
+        return;
+    }
+
+    index = nextIndex;
+    show(index);
+}
+
+function prev() {
+    if (locked) return;
+
+    let prevIndex = index - 1;
+    if (prevIndex < 0) return;
+    if (isTrigger(prevIndex)) prevIndex--;
+    if (prevIndex < 0) return;
+
+    index = prevIndex;
+    show(index);
+}
 
 function runFlash() {
-    flashEl.style.display = 'flex';
+    flashEl.style.display = 'block';
+    flashEl.style.opacity = '1';
+    flashEl.style.transition = '';
+    flashImgs.forEach(img => img.classList.remove('visible'));
+
+    const durations = [1400, 900, 700, 600, 500, 2200];
     let i = 0;
-    locked = true;
-
-    flashImgs.forEach(p => p.classList.remove('visible'));
-
-    const durations = [1200, 900, 900, 700, 700, 1500];
 
     function step() {
-        flashImgs.forEach(p => p.classList.remove('visible'));
+        flashImgs.forEach(img => img.classList.remove('visible'));
         flashImgs[i].classList.add('visible');
 
-        if (i === flashImgs.length - 1) {
-            setTimeout(() => {
-                flashEl.style.display = 'none';
-                locked = false;
-                next();
-            }, durations[i]);
-            return;
-        }
+        const isLast = i === flashImgs.length - 1;
 
         setTimeout(() => {
-            i++;
-            step();
+            if (isLast) {
+                flashEl.style.transition = 'opacity 0.6s ease';
+                flashEl.style.opacity = '0';
+
+                setTimeout(() => {
+                    flashEl.style.display = 'none';
+                    flashEl.style.opacity = '1';
+                    flashEl.style.transition = '';
+
+                    setTimeout(() => {
+                        index++;
+                        show(index);
+                        locked = false;
+                    }, 420);
+
+                }, 600);
+            } else {
+                i++;
+                step();
+            }
         }, durations[i]);
     }
 
     step();
 }
 
-function endLoop() {
-    locked = true;
-    // Fade current slide out
-    slides[index].style.transition = 'opacity 1.5s ease';
-    slides[index].style.opacity = '0';
-
-    setTimeout(() => {
-        slides[index].style.transition = '';
-        slides[index].style.opacity = '';
-        index = 0;
-        show(0);
-        locked = false;
-    }, 3000);
-}
-
-// --- Controls ---
-
-// Click / tap
 document.addEventListener('click', next);
 
-// Keyboard
 document.addEventListener('keydown', e => {
     if (e.code === 'ArrowRight' || e.code === 'Space') { e.preventDefault(); next(); }
     if (e.code === 'ArrowLeft') { e.preventDefault(); prev(); }
 });
 
-// Touch swipe
 let touchStartX = 0;
 document.addEventListener('touchstart', e => {
     touchStartX = e.changedTouches[0].clientX;
@@ -258,17 +257,11 @@ document.addEventListener('touchstart', e => {
 
 document.addEventListener('touchend', e => {
     const delta = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(delta) < 50) {
-        // Short tap = next
-        next();
-    } else if (delta > 50) {
-        prev();
-    } else if (delta < -50) {
-        next();
-    }
+    if (Math.abs(delta) < 50) next();
+    else if (delta > 50) prev();
+    else if (delta < -50) next();
 }, { passive: true });
 
-// Init
 show(0);
 </script>
 

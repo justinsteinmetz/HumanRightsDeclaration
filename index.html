@@ -8,11 +8,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
 
 <style>
-body {
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
     margin: 0;
+    height: 100%;
     font-family: 'Inter', sans-serif;
     background: #000;
     color: #f5f5f5;
+}
+
+.stage {
+    position: fixed;
+    inset: 0;
     overflow: hidden;
 }
 
@@ -20,172 +28,283 @@ body {
     position: absolute;
     inset: 0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    opacity: 0;
-    transition: opacity 0.6s ease;
     padding: 60px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
 }
 
 .slide.active {
     opacity: 1;
+    pointer-events: auto;
+}
+
+h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 800;
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
 }
 
 .quote {
     font-family: 'Playfair Display', serif;
-    font-size: 2rem;
+    font-style: italic;
+    font-size: clamp(1.4rem, 4vw, 2.4rem);
+    margin: 0;
+    line-height: 1.4;
 }
 
 .highlight {
     color: #ff3b3b;
-    font-weight: 600;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
 }
 
+/* Flash overlay */
 #flash {
     position: fixed;
     inset: 0;
-    background: black;
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    background: #000;
 }
 
 #flash img {
-    max-width: 100%;
-    max-height: 100%;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.15s ease;
 }
+
+#flash img.visible {
+    opacity: 1;
+}
+
+/* Hint */
+#hint {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #444;
+    opacity: 1;
+    transition: opacity 1s ease;
+    pointer-events: none;
+}
+
+#hint.hidden { opacity: 0; }
 </style>
 </head>
 
 <body>
 
-<div class="slide active">
-    <h1>Human Rights</h1>
-    <p class="quote">You benefit from systems that violate them.</p>
+<div class="stage">
+
+    <div class="slide active" id="s0">
+        <h1>Human Rights</h1>
+        <p class="quote">You benefit from systems that violate them.</p>
+    </div>
+
+    <div class="slide" id="s1">
+        <p class="quote">"Not me."</p>
+        <p class="highlight">Yes, you.</p>
+    </div>
+
+    <div class="slide" id="s2">
+        <p class="highlight">You live inside it.</p>
+    </div>
+
+    <!-- trigger: no visible content, skipped in both directions -->
+    <div class="slide trigger" id="s3"></div>
+
+    <div class="slide" id="s4">
+        <p class="quote">You watch. You scroll. You continue.</p>
+    </div>
+
 </div>
 
-<div class="slide">
-    <p class="quote">"Not me."</p>
-    <p class="highlight">Yes, you.</p>
-</div>
-
-<div class="slide">
-    <p class="highlight">You live inside it.</p>
-</div>
-
-<div class="slide trigger"></div>
-
-<div class="slide">
-    <p class="quote">You watch. You scroll. You continue.</p>
-</div>
-
+<!-- Flash overlay with repo images -->
 <div id="flash">
-    <img id="flashImg">
+    <img src="images/crowd.jpg" alt="">
+    <img src="images/megaphone.jpg" alt="">
+    <img src="images/smoke.jpg" alt="">
+    <img src="images/rupture.jpg" alt="">
+    <img src="images/arrest.jpg" alt="">
+    <img src="images/train.jpg" alt="">
 </div>
+
+<div id="hint">click or press → to advance</div>
 
 <script>
 const slides = document.querySelectorAll('.slide');
+const flashEl = document.getElementById('flash');
+const flashImgs = document.querySelectorAll('#flash img');
+const hint = document.getElementById('hint');
+
 let index = 0;
 let locked = false;
+let hintHidden = false;
 
-const images = [
-"images/crowd.jpg",
-"images/megaphone.jpg",
-"images/smoke.jpg",
-"images/rupture.jpg",
-"images/arrest.jpg",
-"images/train.jpg"
-];
-
-// PRELOAD EVERYTHING FIRST
-function preload(callback) {
-    let loaded = 0;
-
-    images.forEach(src => {
-        const img = new Image();
-        img.onload = img.onerror = () => {
-            loaded++;
-            if (loaded === images.length) callback();
-        };
-        img.src = src;
-    });
+function isTrigger(i) {
+    return slides[i] && slides[i].classList.contains('trigger');
 }
 
 function show(i) {
     slides.forEach(s => s.classList.remove('active'));
-    slides[i].classList.add('active');
+    if (slides[i]) slides[i].classList.add('active');
+}
+
+function hideHint() {
+    if (!hintHidden) {
+        hint.classList.add('hidden');
+        hintHidden = true;
+    }
 }
 
 function next() {
     if (locked) return;
+    hideHint();
 
-    const nextIndex = index + 1;
-
-    // trigger flash BEFORE showing slide
-    if (slides[nextIndex] && slides[nextIndex].classList.contains('trigger')) {
-        index = nextIndex;
-        flash();
+    let nextIndex = index + 1;
+    if (nextIndex >= slides.length) {
+        // Last slide: fade out, loop back
+        endLoop();
         return;
     }
 
-    index++;
-    if (index >= slides.length) index = slides.length - 1;
+    // If next is trigger, fire flash then skip past it
+    if (isTrigger(nextIndex)) {
+        index = nextIndex;
+        runFlash();
+        return;
+    }
 
+    index = nextIndex;
     show(index);
 }
 
 function prev() {
     if (locked) return;
+    hideHint();
 
-    index--;
-    if (index < 0) index = 0;
+    let prevIndex = index - 1;
+    if (prevIndex < 0) return;
 
+    // Skip trigger slide going backwards
+    if (isTrigger(prevIndex)) prevIndex--;
+    if (prevIndex < 0) return;
+
+    index = prevIndex;
     show(index);
 }
 
-function flash() {
-    const container = document.getElementById('flash');
-    const img = document.getElementById('flashImg');
+const imageSrcs = [
+    'images/crowd.jpg',
+    'images/megaphone.jpg',
+    'images/smoke.jpg',
+    'images/rupture.jpg',
+    'images/arrest.jpg',
+    'images/train.jpg'
+];
 
+// Preload images
+let loaded = 0;
+imageSrcs.forEach((src, i) => {
+    flashImgs[i].onload = flashImgs[i].onerror = () => { loaded++; };
+    flashImgs[i].src = src;
+});
+
+function runFlash() {
+    flashEl.style.display = 'flex';
     let i = 0;
     locked = true;
-    container.style.display = "flex";
 
-    function run() {
-        img.src = images[i];
+    flashImgs.forEach(p => p.classList.remove('visible'));
 
-        if (i === images.length - 1) {
+    const durations = [1200, 900, 900, 700, 700, 1500];
+
+    function step() {
+        flashImgs.forEach(p => p.classList.remove('visible'));
+        flashImgs[i].classList.add('visible');
+
+        if (i === flashImgs.length - 1) {
             setTimeout(() => {
-                container.style.display = "none";
+                flashEl.style.display = 'none';
                 locked = false;
                 next();
-            }, 1500);
+            }, durations[i]);
             return;
         }
 
         setTimeout(() => {
             i++;
-            run();
-        }, i < 2 ? 1200 : 700);
+            step();
+        }, durations[i]);
     }
 
-    run();
+    step();
 }
 
-// controls
-document.body.onclick = next;
+function endLoop() {
+    locked = true;
+    // Fade current slide out
+    slides[index].style.transition = 'opacity 1.5s ease';
+    slides[index].style.opacity = '0';
 
+    setTimeout(() => {
+        slides[index].style.transition = '';
+        slides[index].style.opacity = '';
+        index = 0;
+        show(0);
+        locked = false;
+    }, 3000);
+}
+
+// --- Controls ---
+
+// Click / tap
+document.addEventListener('click', next);
+
+// Keyboard
 document.addEventListener('keydown', e => {
-    if (e.code === "ArrowRight" || e.code === "Space") next();
-    if (e.code === "ArrowLeft") prev();
+    if (e.code === 'ArrowRight' || e.code === 'Space') { e.preventDefault(); next(); }
+    if (e.code === 'ArrowLeft') { e.preventDefault(); prev(); }
 });
 
-// START ONLY AFTER IMAGES ARE READY
-preload(() => {
-    show(0);
-});
+// Touch swipe
+let touchStartX = 0;
+document.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].clientX;
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+    const delta = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(delta) < 50) {
+        // Short tap = next
+        next();
+    } else if (delta > 50) {
+        prev();
+    } else if (delta < -50) {
+        next();
+    }
+}, { passive: true });
+
+// Init
+show(0);
 </script>
 
 </body>
